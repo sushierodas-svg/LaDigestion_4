@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>La Digestión – Escolaris</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;900&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --verde:    #2d8c5e;
+      --verde-cl: #4db882;
+      --naranja:  #e96c2f;
+      --amarillo: #f5c842;
+      --crema:    #fdf6ec;
+      --cafe:     #6b3a1f;
+      --gris-cl:  #f0ebe3;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: var(--crema);
+      color: var(--cafe);
+      overflow-x: hidden;
+    }
+
+    /* ─── HERO ─────────────────────────────── */
+    header {
+      position: relative;
+      background: linear-gradient(135deg, #1a5c3a 0%, #2d8c5e 55%, #e96c2f 100%);
+      color: #fff;
+      text-align: center;
+      padding: 70px 24px 90px;
+      overflow: hidden;
+    }
+    header::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 70% 30%, rgba(245,200,66,.18) 0%, transparent 65%),
+                  radial-gradient(ellipse at 20% 80%, rgba(233,108,47,.25) 0%, transparent 60%);
+    }
+    header .badge {
+      display: inline-block;
+      background: rgba(255,255,255,.2);
+      border: 1.5px solid rgba(255,255,255,.45);
+      border-radius: 50px;
+      font-size: .75rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      padding: 6px 18px;
+      margin-bottom: 18px;
+      backdrop-filter: blur(4px);
+    }
+    header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.4rem, 6vw, 4.2rem);
+      line-height: 1.1;
+      position: relative;
+    }
+    header h1 span { color: var(--amarillo); }
+    header p.subtitle {
+      margin-top: 14px;
+      font-size: 1.05rem;
+      opacity: .88;
+      max-width: 540px;
+      margin-inline: auto;
+    }
+
+    /* floating icons */
+    .float-icon {
+      position: absolute;
+      font-size: 3.2rem;
+      opacity: .18;
+      animation: drift 6s ease-in-out infinite;
+    }
+    .float-icon:nth-child(1) { top: 12%; left: 6%;  animation-delay: 0s; }
+    .float-icon:nth-child(2) { top: 55%; left: 3%;  animation-delay: 1.5s; font-size: 2rem; }
+    .float-icon:nth-child(3) { top: 15%; right: 6%; animation-delay: .8s; }
+    .float-icon:nth-child(4) { top: 60%; right: 4%; animation-delay: 2.2s; font-size: 2.4rem; }
+    @keyframes drift {
+      0%,100% { transform: translateY(0) rotate(-4deg); }
+      50%      { transform: translateY(-14px) rotate(4deg); }
+    }
+
+    /* wave divider */
+    .wave { display: block; margin-top: -2px; }
+
+    /* ─── MAIN LAYOUT ──────────────────────── */
+    main { max-width: 1100px; margin: 0 auto; padding: 0 20px 80px; }
+
+    /* ─── INTRO BOX ────────────────────────── */
+    .intro-box {
+      background: var(--verde);
+      color: #fff;
+      border-radius: 20px;
+      padding: 32px 36px;
+      margin-top: -48px;
+      position: relative;
+      z-index: 2;
+      box-shadow: 0 8px 40px rgba(45,140,94,.35);
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+    .intro-box .big-icon { font-size: 3.6rem; flex-shrink: 0; }
+    .intro-box h2 { font-size: 1.25rem; font-weight: 900; margin-bottom: 6px; }
+    .intro-box p  { font-size: .95rem; line-height: 1.6; opacity: .92; }
+
+    /* ─── SECTION TITLE ────────────────────── */
+    .section-title {
+      text-align: center;
+      margin: 60px 0 36px;
+    }
+    .section-title h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      color: var(--verde);
+      position: relative;
+      display: inline-block;
+    }
+    .section-title h2::after {
+      content: '';
+      position: absolute;
+      bottom: -8px; left: 50%;
+      transform: translateX(-50%);
+      width: 60px; height: 4px;
+      border-radius: 4px;
+      background: var(--naranja);
+    }
+    .section-title p {
+      margin-top: 18px;
+      color: #7a5c44;
+      font-size: .97rem;
+    }
+
+    /* ─── ETAPAS TIMELINE ──────────────────── */
+    .timeline { position: relative; padding: 10px 0 0; }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 0; bottom: 0;
+      width: 4px;
+      background: linear-gradient(to bottom, var(--verde-cl), var(--naranja));
+      transform: translateX(-50%);
+      border-radius: 4px;
+    }
+
+    .step {
+      display: flex;
+      align-items: flex-start;
+      gap: 28px;
+      margin-bottom: 52px;
+      position: relative;
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity .55s ease, transform .55s ease;
+    }
+    .step.visible { opacity: 1; transform: translateY(0); }
+
+    /* odd = left */
+    .step:nth-child(odd)  { flex-direction: row;         padding-right: calc(50% + 44px); }
+    .step:nth-child(even) { flex-direction: row-reverse; padding-left:  calc(50% + 44px); }
+
+    /* center dot */
+    .step::before {
+      content: attr(data-num);
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 46px; height: 46px;
+      border-radius: 50%;
+      background: var(--naranja);
+      color: #fff;
+      font-weight: 900;
+      font-size: 1.1rem;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 14px rgba(233,108,47,.45);
+      z-index: 1;
+      top: 12px;
+    }
+
+    .step-card {
+      background: #fff;
+      border-radius: 18px;
+      padding: 24px 26px;
+      flex: 1;
+      box-shadow: 0 4px 22px rgba(0,0,0,.08);
+      border-left: 5px solid var(--verde);
+      transition: transform .2s, box-shadow .2s;
+    }
+    .step:nth-child(even) .step-card { border-left: none; border-right: 5px solid var(--naranja); }
+    .step-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 32px rgba(0,0,0,.13);
+    }
+    .step-card .icon { font-size: 2rem; margin-bottom: 8px; }
+    .step-card h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      color: var(--verde);
+      margin-bottom: 8px;
+    }
+    .step:nth-child(even) .step-card h3 { color: var(--naranja); }
+    .step-card p { font-size: .92rem; line-height: 1.65; color: #5a4030; }
+    .step-card .term {
+      display: inline-block;
+      background: var(--gris-cl);
+      border-radius: 8px;
+      padding: 4px 10px;
+      font-size: .8rem;
+      font-weight: 700;
+      color: var(--verde);
+      margin-top: 10px;
+      letter-spacing: .05em;
+    }
+    .step:nth-child(even) .step-card .term { color: var(--naranja); }
+
+    /* ─── CONCEPTOS CLAVE CARDS ─────────────── */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 22px;
+    }
+    .concept-card {
+      background: #fff;
+      border-radius: 18px;
+      padding: 28px 24px;
+      text-align: center;
+      box-shadow: 0 4px 18px rgba(0,0,0,.07);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: transform .2s;
+    }
+    .concept-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 5px;
+      background: var(--verde);
+    }
+    .concept-card:nth-child(2)::before { background: var(--naranja); }
+    .concept-card:nth-child(3)::before { background: var(--amarillo); }
+    .concept-card:nth-child(4)::before { background: var(--verde-cl); }
+    .concept-card:hover { transform: translateY(-5px); }
+
+    .concept-card .c-icon { font-size: 2.8rem; margin-bottom: 12px; }
+    .concept-card h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.15rem;
+      color: var(--cafe);
+      margin-bottom: 10px;
+    }
+    /* flip */
+    .concept-card .front, .concept-card .back {
+      transition: opacity .3s;
+    }
+    .concept-card .back {
+      display: none;
+      font-size: .9rem;
+      color: #5a4030;
+      line-height: 1.6;
+      padding-top: 4px;
+    }
+    .concept-card.flipped .front { display: none; }
+    .concept-card.flipped .back  { display: block; }
+    .flip-hint {
+      font-size: .72rem;
+      color: #aaa;
+      margin-top: 12px;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+
+    /* ─── QUIZ ─────────────────────────────── */
+    .quiz-wrap {
+      background: linear-gradient(135deg, #1a5c3a, #2d8c5e);
+      border-radius: 24px;
+      padding: 44px 36px;
+      color: #fff;
+      margin-top: 20px;
+    }
+    .quiz-wrap h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.7rem;
+      margin-bottom: 6px;
+    }
+    .quiz-wrap .q-sub { opacity: .8; margin-bottom: 28px; font-size: .92rem; }
+
+    .question-block { display: none; }
+    .question-block.active { display: block; }
+
+    .question-block h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 18px;
+      line-height: 1.5;
+    }
+    .options { display: flex; flex-direction: column; gap: 10px; }
+    .opt-btn {
+      background: rgba(255,255,255,.12);
+      border: 1.5px solid rgba(255,255,255,.25);
+      color: #fff;
+      border-radius: 12px;
+      padding: 13px 18px;
+      font-family: 'Nunito', sans-serif;
+      font-size: .93rem;
+      text-align: left;
+      cursor: pointer;
+      transition: background .2s, border-color .2s, transform .1s;
+    }
+    .opt-btn:hover { background: rgba(255,255,255,.22); transform: translateX(4px); }
+    .opt-btn.correct { background: rgba(77,184,130,.55); border-color: var(--verde-cl); }
+    .opt-btn.wrong   { background: rgba(233,108,47,.5);  border-color: var(--naranja); }
+
+    .feedback {
+      margin-top: 14px;
+      font-size: .92rem;
+      min-height: 24px;
+      font-weight: 700;
+    }
+    .feedback.ok  { color: var(--amarillo); }
+    .feedback.err { color: #ffb89e; }
+
+    .quiz-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 24px;
+    }
+    .q-counter { font-size: .85rem; opacity: .7; }
+    .next-btn {
+      background: var(--naranja);
+      color: #fff;
+      border: none;
+      border-radius: 50px;
+      padding: 10px 26px;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700;
+      font-size: .9rem;
+      cursor: pointer;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .3s;
+    }
+    .next-btn.show { opacity: 1; pointer-events: all; }
+    .next-btn:hover { background: #d45920; }
+
+    .result-box {
+      display: none;
+      text-align: center;
+      padding: 20px 0;
+    }
+    .result-box .r-score {
+      font-family: 'Playfair Display', serif;
+      font-size: 4rem;
+      color: var(--amarillo);
+    }
+    .result-box p { margin-top: 10px; font-size: 1rem; opacity: .9; }
+    .result-box .retry-btn {
+      margin-top: 22px;
+      background: var(--amarillo);
+      color: var(--cafe);
+      border: none;
+      border-radius: 50px;
+      padding: 12px 32px;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 900;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: transform .15s;
+    }
+    .result-box .retry-btn:hover { transform: scale(1.04); }
+
+    /* ─── PROGRESS BAR ────────────────────── */
+    .q-progress {
+      height: 5px;
+      background: rgba(255,255,255,.15);
+      border-radius: 3px;
+      margin-bottom: 28px;
+      overflow: hidden;
+    }
+    .q-progress-fill {
+      height: 100%;
+      background: var(--amarillo);
+      border-radius: 3px;
+      transition: width .4s;
+    }
+
+    /* ─── FOOTER ───────────────────────────── */
+    footer {
+      text-align: center;
+      padding: 30px 20px;
+      font-size: .8rem;
+      color: #a08870;
+      border-top: 1px solid #e8ddd0;
+    }
+
+    /* ─── RESPONSIVE ────────────────────────── */
+    @media (max-width: 680px) {
+      .timeline::before { left: 22px; }
+      .step { flex-direction: column !important; padding: 0 0 0 62px !important; }
+      .step::before { left: 0; transform: none; }
+      .step-card { border-left: 5px solid var(--verde) !important; border-right: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══ HEADER ═══════════════════════════════ -->
+<header>
+  <span class="float-icon">🍎</span>
+  <span class="float-icon">💧</span>
+  <span class="float-icon">🌿</span>
+  <span class="float-icon">✨</span>
+
+  <div class="badge">Ciencias de la Salud · Escolaris</div>
+  <h1>La <span>Digestión</span></h1>
+  <p class="subtitle">Descubre cómo tu cuerpo convierte los alimentos en energía, paso a paso.</p>
+</header>
+
+<svg class="wave" viewBox="0 0 1440 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M0 0l48 8c48 8 144 24 240 26.7C384 37 480 27 576 21.3 672 16 768 16 864 21.3 960 27 1056 37 1152 37.3 1248 37 1344 27 1392 21.3L1440 16V54H0V0z" fill="#fdf6ec"/>
+</svg>
+
+<!-- ═══ MAIN ═══════════════════════════════════ -->
+<main>
+
+  <!-- INTRO -->
+  <div class="intro-box">
+    <div class="big-icon">🔬</div>
+    <div>
+      <h2>¿Qué es la digestión?</h2>
+      <p>La digestión es el proceso por el cual el cuerpo <strong>descompone los alimentos</strong> en nutrientes pequeños que pueden pasar a la sangre y dar energía a cada célula. Comienza en la boca y termina en el intestino grueso.</p>
+    </div>
+  </div>
+
+  <!-- ETAPAS -->
+  <div class="section-title">
+    <h2>Las Etapas del Proceso</h2>
+    <p>Sigue el camino del alimento a través de tu cuerpo</p>
+  </div>
+
+  <div class="timeline">
+
+    <div class="step" data-num="1">
+      <div class="step-card">
+        <div class="icon">👄</div>
+        <h3>La Boca — Ingestión</h3>
+        <p>Todo empieza aquí. Los <strong>dientes</strong> trituran el alimento y la <strong>saliva</strong> lo humedece con enzimas que rompen los carbohidratos. El resultado es una masa suave llamada <em>bolo alimenticio</em>.</p>
+        <span class="term">🔑 Bolo alimenticio</span>
+      </div>
+    </div>
+
+    <div class="step" data-num="2">
+      <div class="step-card">
+        <div class="icon">🌀</div>
+        <h3>El Esófago — Transporte</h3>
+        <p>El bolo alimenticio baja por el esófago gracias a los <strong>movimientos peristálticos</strong>: contracciones musculares en forma de ola que empujan el alimento hacia el estómago.</p>
+        <span class="term">🔑 Peristalsis</span>
+      </div>
+    </div>
+
+    <div class="step" data-num="3">
+      <div class="step-card">
+        <div class="icon">🧪</div>
+        <h3>El Estómago — Digestión química</h3>
+        <p>El estómago mezcla el bolo alimenticio con los <strong>jugos gástricos</strong> (ácido clorhídrico y enzimas como la pepsina). Esta mezcla se transforma en una pasta líquida llamada <em>quimo</em>.</p>
+        <span class="term">🔑 Jugos gástricos · Quimo</span>
+      </div>
+    </div>
+
+    <div class="step" data-num="4">
+      <div class="step-card">
+        <div class="icon">🟡</div>
+        <h3>Intestino Delgado — Absorción</h3>
+        <p>El quimo llega al intestino delgado donde se absorben los <strong>nutrientes</strong>: proteínas, grasas, vitaminas y minerales pasan a la sangre a través de las <em>vellosidades intestinales</em>.</p>
+        <span class="term">🔑 Absorción · Vellosidades</span>
+      </div>
+    </div>
+
+    <div class="step" data-num="5">
+      <div class="step-card">
+        <div class="icon">♻️</div>
+        <h3>Intestino Grueso — Eliminación</h3>
+        <p>El intestino grueso absorbe el agua restante y forma las <strong>heces</strong>. Lo que el cuerpo no puede aprovechar se elimina en la <em>defecación</em>.</p>
+        <span class="term">🔑 Eliminación · Heces</span>
+      </div>
+    </div>
+
+  </div><!-- /timeline -->
+
+  <!-- CONCEPTOS CLAVE -->
+  <div class="section-title">
+    <h2>Conceptos Clave</h2>
+    <p>Toca cada tarjeta para ver la definición</p>
+  </div>
+
+  <div class="cards-grid">
+
+    <div class="concept-card" onclick="this.classList.toggle('flipped')">
+      <div class="front">
+        <div class="c-icon">🥖</div>
+        <h3>Bolo Alimenticio</h3>
+        <p class="flip-hint">Toca para definición</p>
+      </div>
+      <div class="back">Masa de alimento masticado y mezclado con saliva que se traga. Tiene consistencia blanda y húmeda para poder bajar fácilmente por el esófago.</div>
+    </div>
+
+    <div class="concept-card" onclick="this.classList.toggle('flipped')">
+      <div class="front">
+        <div class="c-icon">🌊</div>
+        <h3>Quimo</h3>
+        <p class="flip-hint">Toca para definición</p>
+      </div>
+      <div class="back">Mezcla semilíquida que resulta de la digestión en el estómago. Contiene el alimento parcialmente digerido con los jugos gástricos.</div>
+    </div>
+
+    <div class="concept-card" onclick="this.classList.toggle('flipped')">
+      <div class="front">
+        <div class="c-icon">🧫</div>
+        <h3>Jugos Gástricos</h3>
+        <p class="flip-hint">Toca para definición</p>
+      </div>
+      <div class="back">Líquidos producidos por el estómago que contienen ácido clorhídrico y enzimas (como la pepsina). Su función es descomponer las proteínas.</div>
+    </div>
+
+    <div class="concept-card" onclick="this.classList.toggle('flipped')">
+      <div class="front">
+        <div class="c-icon">💡</div>
+        <h3>Absorción</h3>
+        <p class="flip-hint">Toca para definición</p>
+      </div>
+      <div class="back">Proceso por el cual los nutrientes del alimento digerido pasan del intestino delgado a la sangre, para ser usados como energía por el cuerpo.</div>
+    </div>
+
+  </div>
+
+  <!-- QUIZ -->
+  <div class="section-title">
+    <h2>¡Pon a Prueba tu Aprendizaje!</h2>
+    <p>Responde las preguntas y comprueba lo que aprendiste</p>
+  </div>
+
+  <div class="quiz-wrap">
+    <h2>Mini Repaso</h2>
+    <p class="q-sub">Selecciona la respuesta correcta en cada pregunta.</p>
+
+    <div class="q-progress"><div class="q-progress-fill" id="qBar" style="width:0%"></div></div>
+
+    <!-- Q1 -->
+    <div class="question-block active" id="q1">
+      <h3>1. ¿Cómo se llama la masa de alimento que se forma en la boca después de masticar?</h3>
+      <div class="options">
+        <button class="opt-btn" onclick="check(this, false)">Quimo</button>
+        <button class="opt-btn" onclick="check(this, true)">Bolo alimenticio</button>
+        <button class="opt-btn" onclick="check(this, false)">Jugo gástrico</button>
+      </div>
+      <div class="feedback" id="fb1"></div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="question-block" id="q2">
+      <h3>2. ¿Qué líquidos produce el estómago para descomponer los alimentos?</h3>
+      <div class="options">
+        <button class="opt-btn" onclick="check(this, false)">Saliva</button>
+        <button class="opt-btn" onclick="check(this, false)">Bilis</button>
+        <button class="opt-btn" onclick="check(this, true)">Jugos gástricos</button>
+      </div>
+      <div class="feedback" id="fb2"></div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="question-block" id="q3">
+      <h3>3. ¿En qué parte del sistema digestivo se absorben la mayoría de los nutrientes?</h3>
+      <div class="options">
+        <button class="opt-btn" onclick="check(this, false)">En el estómago</button>
+        <button class="opt-btn" onclick="check(this, true)">En el intestino delgado</button>
+        <button class="opt-btn" onclick="check(this, false)">En el intestino grueso</button>
+      </div>
+      <div class="feedback" id="fb3"></div>
+    </div>
+
+    <!-- Q4 -->
+    <div class="question-block" id="q4">
+      <h3>4. ¿Cómo se llama la pasta líquida que resulta de la digestión en el estómago?</h3>
+      <div class="options">
+        <button class="opt-btn" onclick="check(this, false)">Bolo alimenticio</button>
+        <button class="opt-btn" onclick="check(this, false)">Heces</button>
+        <button class="opt-btn" onclick="check(this, true)">Quimo</button>
+      </div>
+      <div class="feedback" id="fb4"></div>
+    </div>
+
+    <!-- Q5 -->
+    <div class="question-block" id="q5">
+      <h3>5. ¿Cuál es la función principal de los movimientos peristálticos?</h3>
+      <div class="options">
+        <button class="opt-btn" onclick="check(this, false)">Absorber los nutrientes</button>
+        <button class="opt-btn" onclick="check(this, true)">Mover el alimento a través del esófago</button>
+        <button class="opt-btn" onclick="check(this, false)">Producir ácido clorhídrico</button>
+      </div>
+      <div class="feedback" id="fb5"></div>
+    </div>
+
+    <!-- RESULT -->
+    <div class="result-box" id="resultBox">
+      <div class="r-score" id="scoreDisplay"></div>
+      <p id="resultMsg"></p>
+      <button class="retry-btn" onclick="resetQuiz()">🔄 Intentar de nuevo</button>
+    </div>
+
+    <div class="quiz-nav" id="quizNav">
+      <span class="q-counter" id="qCounter">Pregunta 1 de 5</span>
+      <button class="next-btn" id="nextBtn" onclick="nextQ()">Siguiente →</button>
+    </div>
+  </div>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <strong>Escolaris</strong> · Material educativo para estudiantes de habla hispana · Virginia, EE.UU.<br/>
+  Contenido adaptado para el programa de madurez / educación de adultos
+</footer>
+
+<script>
+  // ── TIMELINE SCROLL ANIMATION ──────────────────
+  const steps = document.querySelectorAll('.step');
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
+  }, { threshold: .15 });
+  steps.forEach(s => io.observe(s));
+
+  // ── QUIZ LOGIC ──────────────────────────────────
+  let current = 1;
+  const total = 5;
+  let score = 0;
+  let answered = false;
+
+  function check(btn, correct) {
+    if (answered) return;
+    answered = true;
+    const fb = document.getElementById('fb' + current);
+    const allBtns = btn.closest('.options').querySelectorAll('.opt-btn');
+    allBtns.forEach(b => b.disabled = true);
+
+    if (correct) {
+      btn.classList.add('correct');
+      fb.textContent = '✅ ¡Correcto! Muy bien.';
+      fb.className = 'feedback ok';
+      score++;
+    } else {
+      btn.classList.add('wrong');
+      // mark correct
+      allBtns.forEach(b => { if (b.onclick.toString().includes('true')) b.classList.add('correct'); });
+      fb.textContent = '❌ No es correcto. Revisa la respuesta marcada en verde.';
+      fb.className = 'feedback err';
+    }
+    document.getElementById('nextBtn').classList.add('show');
+  }
+
+  function nextQ() {
+    if (current < total) {
+      document.getElementById('q' + current).classList.remove('active');
+      current++;
+      document.getElementById('q' + current).classList.add('active');
+      document.getElementById('qCounter').textContent = 'Pregunta ' + current + ' de ' + total;
+      document.getElementById('qBar').style.width = ((current - 1) / total * 100) + '%';
+      document.getElementById('nextBtn').classList.remove('show');
+      answered = false;
+    } else {
+      // show result
+      document.getElementById('q' + current).classList.remove('active');
+      document.getElementById('quizNav').style.display = 'none';
+      document.getElementById('qBar').style.width = '100%';
+      const rb = document.getElementById('resultBox');
+      rb.style.display = 'block';
+      document.getElementById('scoreDisplay').textContent = score + '/' + total;
+      const msgs = ['¡Sigue practicando! Repasa las tarjetas de conceptos.', '¡Buen esfuerzo! Estás aprendiendo bien.', '¡Excelente trabajo! ¡Dominas el tema!'];
+      document.getElementById('resultMsg').textContent = score <= 2 ? msgs[0] : score <= 4 ? msgs[1] : msgs[2];
+    }
+  }
+
+  function resetQuiz() {
+    score = 0; current = 1; answered = false;
+    for (let i = 1; i <= total; i++) {
+      const block = document.getElementById('q' + i);
+      block.classList.remove('active');
+      block.querySelectorAll('.opt-btn').forEach(b => {
+        b.classList.remove('correct','wrong');
+        b.disabled = false;
+      });
+      document.getElementById('fb' + i).textContent = '';
+      document.getElementById('fb' + i).className = 'feedback';
+    }
+    document.getElementById('resultBox').style.display = 'none';
+    document.getElementById('quizNav').style.display = 'flex';
+    document.getElementById('nextBtn').classList.remove('show');
+    document.getElementById('qCounter').textContent = 'Pregunta 1 de 5';
+    document.getElementById('qBar').style.width = '0%';
+    document.getElementById('q1').classList.add('active');
+  }
+</script>
+</body>
+</html>
